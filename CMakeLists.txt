@@ -8,5 +8,10 @@ add_executable(Zadanie1 zadanie1/main.cpp
         zadanie1/PointsSolver.cpp
         zadanie1/PointsSolver.h
         Includes/mMath.h
-        Includes/mMath.cpp)
-add_executable(Zadanie2 zadanie2/main.cpp)
+        Includes/mMath.cpp
+        Includes/sRecord.h)
+add_executable(Zadanie2 zadanie2/main.cpp
+        Includes/sRecord.h
+        zadanie2/SensorFusion.h
+        zadanie2/SensorFusion.cpp
+)
