@@ -2,6 +2,8 @@
 
 Repozytorium zawiera kody źródłowe, implementujące rozwiązania do podanych zadań.
 
+Dodatkowe wyjaśnienia znajdują się bezpośrednio w kodach źródłowych.
+
 ---
 ## Struktura projektu
 
@@ -117,6 +119,20 @@ x oraz y ze wszystkich polaczonych do jednego root punktow (jedna grupa) - a nas
 
 Zródła:
 
+https://www.researchgate.net/publication/228958917_Optimization_of_large-scale_real-time_simulations_by_spatial_hashing
+
+https://www.researchgate.net/publication/277870601_A_Hash_Table_Construction_Algorithm_for_Spatial_Hashing_Based_on_Linear_Memory
+
+https://gameprogrammingpatterns.com/spatial-partition.html
+
+https://www.youtube.com/watch?v=i0OHeCj7SOw
+
+https://www.youtube.com/watch?v=sx4IIQL0x7c
+
+https://www.youtube.com/watch?v=h1xXcSvj7Io
+
+https://www.youtube.com/watch?v=iCXzGgvl3iY
+
 
 ### Zadanie 1.2: ConvexHull (Algorytm Grahama)
 
@@ -158,7 +174,7 @@ W danych występują również pojedyncze anomalie i odchylenia od oczekiwanego 
 
 Charakterystyka błędu: Rejestruje dane z wysoką częstotliwością, precyzyjnie odwzorowując lokalną geometrię trasy (okręgi konkurencji Skidpad). Cierpi jednak na płynnie narastający w czasie błąd względem drugiego sensora – pod koniec przejazdu wyliczona pozycja oddala się od rzeczywistej o kilkanaście metrów.
 
-Podejrzenie źródła: 
+Podejrzenie źródła: Mozliwe przesunięcie fizycznego sensora, lub uślizg kół sprawiło że podawał on błedne dane - co zaczeło kumulować bład. Jednak sama charakterytyka przesunięcia pozastała poprawna.
 
 ### Sensor 2 (Niska częstotliwość, pozycjonowanie absolutne, anomalie)
 
