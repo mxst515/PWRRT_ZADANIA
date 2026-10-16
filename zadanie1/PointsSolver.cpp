@@ -41,6 +41,12 @@ struct AnglesComparator {
     }
 }; //scomparator
 
+
+/*
+ * przeszukuje posortowany po x vector i szuka punktow ktore sa w odleglosci < d na osi x
+ * dla znalezionych punktow gdzie distance < d
+ * dodaje je do jednej grupy
+ */
 void PointsSolver::dfs_rec(std::vector<sPoint>& sorted_pts, double d, int currInx, std::vector<bool>& visited, std::vector<sPoint>& curr_group) {
     visited[currInx] = true;
     curr_group.push_back(sorted_pts[currInx]);
@@ -68,14 +74,19 @@ void PointsSolver::dfs_rec(std::vector<sPoint>& sorted_pts, double d, int currIn
 
 }
 
+/*
+ * sortuje punkty po x a nastepnie dobiera punkty w grupy
+ *
+ * wylicza nowe punkty na podstawie sredniej wartosci punktow w jednej grupie (odlgeglosci < d)
+ */
 void PointsSolver::dedublicate_points(double d) {
-
     std::vector<sPoint> sorted_points = _points;
     std::sort(sorted_points.begin(), sorted_points.end(), X_comp());
 
     std::vector<sPoint> new_points;
 
     int indx = sorted_points.size()+1;
+    // tworzy vector odwiedzonych juz punktow
     std::vector<bool> visited(_points.size(), false);
 
     for (int i=0; i<sorted_points.size(); i++) {
@@ -118,6 +129,11 @@ void PointsSolver::dedublicate_points(double d) {
     _points = new_points;
 }
 
+
+/*
+ * wylicza otoczke punktow i wypisuje jej obwod
+ * korzystajac z algorytmu grahama
+ */
 void PointsSolver::calculate_convexHull() {
     if (_points.empty()) {
         std::cout << "no points";
@@ -145,6 +161,8 @@ void PointsSolver::calculate_convexHull() {
     stack.push(sorted_points[1]);
     stack.push(sorted_points[2]);
 
+    // jezeli kat miedzy 2 ostatnimi punktami w stosie i aktualnym punktem oznacza lewoskret (det>0) - dodajemy punkt do otoczki
+    // w przeciwnym razie jest usuwany ostatni punkt ze stosu (znaleziono bardziej skrajny punkt)
     for (int i = 3; i < sorted_points.size(); i++) {
         while (stack.size()>2 && mMath::calc_det(next_to_top(stack), stack.top(), sorted_points[i]) <= 0) {
             stack.pop();
@@ -174,6 +192,12 @@ void PointsSolver::calculate_convexHull() {
 
 }
 
+/*
+ * sortuje punkty wzgledem kata od punktu p0 (najmniejszy y)
+ *
+ * filtruje punkty ktore leza na tym samym kacie - i wybiera ten najdalszy
+ *
+ */
 std::vector<sPoint> PointsSolver::filter_points(std::vector<sPoint> pts, sPoint& p0) {
     std::sort(pts.begin(), pts.end(), AnglesComparator(p0));
     std::vector<sPoint> result;
@@ -189,6 +213,9 @@ std::vector<sPoint> PointsSolver::filter_points(std::vector<sPoint> pts, sPoint&
     return result;
 }
 
+/*
+ * zwraca index obiektu z najmniejszym y
+ */
 int PointsSolver::find_min_y_indx(std::vector<sPoint>& pts) {
     int inx = 0;
     sPoint min = pts[inx];

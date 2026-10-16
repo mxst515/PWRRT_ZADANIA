@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 4.3)
+cmake_minimum_required(VERSION 3.20)
 project(PWRRT_ZADANIA)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -9,9 +9,17 @@ add_executable(Zadanie1 zadanie1/main.cpp
         zadanie1/PointsSolver.h
         Includes/mMath.h
         Includes/mMath.cpp
-        Includes/sRecord.h)
+)
+
 add_executable(Zadanie2 zadanie2/main.cpp
         Includes/sRecord.h
         zadanie2/SensorFusion.h
         zadanie2/SensorFusion.cpp
+)
+
+add_executable(Zadanie1_dodatek zadanie1_dodatek/main.cpp
+        Includes/sPoint.h
+        Includes/DSU.h
+        zadanie1_dodatek/DedublicateSolver.cpp
+        zadanie1_dodatek/DedublicateSolver.h
 )

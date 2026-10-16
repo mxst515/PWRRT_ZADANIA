@@ -61,30 +61,12 @@ int main() {
 
     fix_y_coordinates(records_sens_2);
 
+    // tablica bledow (roznic) pomiedzy sensorem 1 a sens 2
     std::vector<sRecord> err_table;
-
     create_err_vector(records_sens_1, records_sens_2, err_table);
 
     double T = 0;
     bool go=true;
-        std::ofstream file("../test4.csv");
-    file << "timestamp,x,y\n";
-
-    for (int i = 0; i < records_sens_1.size(); i++) {
-        T += 0.023;
-
-        std::pair p = find_l_r(records_sens_1, T);
-        std::pair p_n = interpolate(p.first, p.second, T);
-
-        std::pair err_p = find_l_r(err_table, T);
-        std::pair err_p_n = interpolate(err_p.first, err_p.second, T);
-
-        double final_x = p_n.first + err_p_n.first;
-        double final_y = p_n.second + err_p_n.second;
-
-        std::cout<< T << "," << final_x << "," << final_y << std::endl;
-        file << T << "," << final_x << "," << final_y << "\n";
-    }
 
     while (go) {
         std::cout << "Podaj T: ";
@@ -95,12 +77,17 @@ int main() {
             continue;
         }
         else {
+            // najblizsze pomiary sensora 1 wokol czasu T
+            // oraz ich przyblizona pozycja w czasie T
             std::pair p = find_l_r(records_sens_1, T);
             std::pair p_n = interpolate(p.first, p.second, T);
 
+            // najblizsze probki bledu wokol czasu T
+            // przyblizony wektor bledu dla czasu T
             std::pair err_p = find_l_r(err_table, T);
             std::pair err_p_n = interpolate(err_p.first, err_p.second, T);
 
+            // pomiar sensora 1 + blad w odniesieniu do sensora 2
             double final_x = p_n.first + err_p_n.first;
             double final_y = p_n.second + err_p_n.second;
 

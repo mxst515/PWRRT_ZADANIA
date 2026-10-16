@@ -6,7 +6,7 @@
 /*
  * zwraca pair<sRecord, sRecord> [najblizszy pomiar na lewo od czasu t, najblizsy pomiar na prawo od czasu t]
  *
- * w przypadku gdy nie ma lewego, prawego pomiaru lub timestamp==t wystepuje w danych
+ * w przypadku gdy nie ma lewego/prawego pomiaru lub timestamp==t wystepuje w danych
  * zwracany jest ten sam pomiar .first == .second
  */
 std::pair<sRecord, sRecord> find_l_r(std::vector<sRecord>& sens_rec, double t) {
@@ -14,6 +14,7 @@ std::pair<sRecord, sRecord> find_l_r(std::vector<sRecord>& sens_rec, double t) {
         return std::make_pair(sRecord(0,0,0), sRecord(0,0,0));
     }
 
+    // znajduje pierwszy element nie mniejszy niz timestamp = t (pomiar.timestamp >= t)
     const auto it = std::lower_bound(sens_rec.begin(), sens_rec.end(), t, [](const sRecord& a, double t) {
         return a.timestamp < t;
     });
@@ -27,15 +28,19 @@ std::pair<sRecord, sRecord> find_l_r(std::vector<sRecord>& sens_rec, double t) {
     }
 
     if (it == sens_rec.end()) {
-        return std::make_pair(*it, *it);
+        return std::make_pair(*(it-1), *(it-1));
     }
 
+    // it-1 - pomiar na lewo | it - pomiar na prawo
     return std::make_pair(*(it-1), *it);
 }
 
 
 /*
  * zwraca pair<double,double> [interpolowany x, interpolowany y]
+ *
+ * oblicza przyblizona pozycje (x,y) w czasie docelowym t, lezacym miedzy czasem
+ * dwoch pomiarow p1 i p2
  *
  * In computer graphics it is common to linearly interpolate between an initial value v0
  * and an ending value v1 for a parameter t ranging from 0 to 1;
@@ -77,6 +82,9 @@ std::pair<double, double> interpolate(sRecord& p1, sRecord& p2, double t) {
  * dla kazdego dostepnego pomiaru sensora 2 (t, x_s2, y_s2)
  * wylicza inteprolowana pozycje sensora 1 - dla dokladnie tego samego czasu t,
  * nastepnie wylicza delty przesuniecia punktu sensora 1, wzgledem sensora 2.
+ *
+ * jako baze czasu przyjmuje pomiary sensora 2, nastepnie wylicza (poprzez interpolacje)
+ * gdzie znajdowal sie sensor 1 w dokladnie tym samym momencie
  *
  * gdy err_x = 0 i err_y = 0 - sensory zapisaly dla tego samego timestamp, dokladnie takie same pomiary x i y
  *
