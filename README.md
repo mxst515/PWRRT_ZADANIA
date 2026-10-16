@@ -175,9 +175,63 @@ W związku z tym połączenie obu źródeł danych może pozwolić na uzyskanie 
 
 # Zadanie 2.1 Fuzja danych i estymacja wybranej pozycji
 
+Rozwiązanie opiera sie na połączeniu dokładnyc danych o charakterystyce toru sensora 1 z dokładnymi danymi o pozycji globalnej sensora 2.
 
+- Ujednolicenie układów odniesienia: Znak osi Y danych z Sensora 2 zostaje odwrócony w fazie wczytywania plików, aby zrównać przestrzeń roboczą obu sensorów.
 
+- Wyznaczanie wektora błędu:
+  Program traktuje rzadszy Sensor 2 jako "pewną" mapę bazową. Dla każdego pomiaru z Sensora 2 sprawdza, gdzie dokładnie znajdował się wtedy Sensor 1. Różnica w ich współrzędnych to błąd, o jaki Sensor 1 "odjechał" od właściwej trasy w danym momencie.
 
+- Usuwanie nagłych skoków (Filtr Mediany):
+  Czasami Sensor 2 fałszywie "skacze" o kilka metrów. Aby te błędy nie zepsuły wyliczonych danych, program używa 3-punktowego filtra mediany. Analizuje on trzy kolejne wyliczone wektory, sortuje je i wybiera wartość środkową (medianę). Dzięki temu pojedyncze, skoki są usuwane.
 
+- Obliczanie docelowej pozycji (Interpolacja w czasie T):
+  Użytkownik podaje dowolny czas z przejazdu, a program:
+  - znajduje najblizsze punkty w obrębie T w sensorze 1
+  - Interpoluje liniowo pozycje sensora 1
+  - Interpoluje odpowiednia poprawę (z tablicy błedów) równiez w obrębie czasu T
+  - Dodaje wyliczony bład do wyliczonej pozycji sensora 1 - korygując trase z powrotem na własciwe miejsce na mapie.
+
+Niestety nie udało mi się osiągnąc zadowalającej dokładności.
+Problem wynika z zbytniej zaokrąglania wyników.
+Lepszym rozwiązaniem byłoby zastosowanie odpowiedniego filtra np. Filtr Kalmana.
+
+Końcowo udało mi się uzyskać takie szacowania dla pozycji auta:
+
+![](wykresy.png)
+
+Czarny wykres (estymowany/wyliczony) poprawnie skorygował bład sensora 1, jednocześnie zachowując jego częste próbkowanie, 
+dlatego zakręty faktycznie przypominają jazdę po łuku.
+
+# Uruchomienie programow
+
+Wymagania
+
+- CMake cmake_minimum_required(VERSION 3.20)
+- C++ 20XX
+- Python 3.14
+- pip
+
+budowa projektu cmake
+```angular2html
+cmake -S . -B build
+cmake --build build
+```
+
+aktywacja srodowiska venv
+```angular2html
+py -m venv .venv
+.venv\Scripts\activate
+```
+
+instalacja zaleznosci
+```angular2html
+py -m pip install -r requirements.txt
+```
+
+uruchomienie pliku z wykresami
+```angular2html
+py zadanie2/analyzer.py
+```
 
 
